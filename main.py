@@ -1,5 +1,5 @@
 from pygame import *
-
+from random import *
 SCREENSIZE = (700, 700)
 BACKCOLOR = (255, 255, 255)
 
@@ -14,7 +14,7 @@ class GameSprite(sprite.Sprite):
     def __init__ (self, img, x, y, speed, width, height):
         super().__init__()
         self.image = transform.scale(image.load(img),(width, height))
-        self.speed = 4
+        self.speed = speed
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -35,10 +35,39 @@ class player(GameSprite):
             self.rect.y -= self.speed
         if keys[K_DOWN] and self.rect.y + self.rect.height < SCREENSIZE[1]:
             self.rect.y += self.speed
+class Ball(sprite.Sprite):
+    def __init__ (self, img, x, y, speed_x,speed_y, width, height):
+        super().__init__()
+        self.image = transform.scale(image.load(img),(width, height))
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def update_ball(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+        if sprite.collide_rect(self, platform_left) or sprite.collide_rect(self, platform_right):
+            self.speed_x *= -1
+        if self.rect.y< 0 or self.rect.y > SCREENSIZE[1] - self.rect.height:
+            self.speed_y *= -1
+    
+    def is_L(self):
+        if self.x > SCREENSIZE[1] - self.width:
+            return 'right'
+        elif self:
+            return 'left'
+x = randint(-5,5)
+y = randint(-5,5)
 
 platform_left = player('platform.png',20,320,4,25,99)
 platform_right = player('platform.png',660,320,4,25,99)
 
+ball = Ball('360fx360f.png' , 330, 330, x,y,150,150)
 
 while run:
     for e in event.get():
@@ -55,6 +84,10 @@ while run:
 
     platform_left.update_left()
     platform_right.update_right()
+
+    ball.reset()
+    ball.update_ball()
+
 
 
     
