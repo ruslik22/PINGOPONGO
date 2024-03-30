@@ -14,7 +14,7 @@ class GameSprite(sprite.Sprite):
     def __init__ (self, img, x, y, speed, width, height):
         super().__init__()
         self.image = transform.scale(image.load(img),(width, height))
-        self.speed = speed
+        self.speed = 7
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -57,22 +57,32 @@ class Ball(sprite.Sprite):
             self.speed_y *= -1
     
     def is_L(self):
-        if self.x > SCREENSIZE[1] - self.width:
+        if self.rect.x > SCREENSIZE[1] - self.rect.width:
             return 'right'
-        elif self:
+        elif self.rect.x < 0:
             return 'left'
-x = randint(-5,5)
-y = randint(-5,5)
+x = randint(-7,7)
+y = randint(-7,7)
 
 platform_left = player('platform.png',20,320,4,25,99)
 platform_right = player('platform.png',660,320,4,25,99)
 
 ball = Ball('360fx360f.png' , 330, 330, x,y,150,150)
+finish = False
+
+
+font.init()
+font = font.Font(None, 50)  
+
 
 while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+    if finish != True:
+        for e in event.get():
+            if e.type == QUIT:
+                run = False
 
 
     window.fill(BACKCOLOR)
@@ -87,6 +97,16 @@ while run:
 
     ball.reset()
     ball.update_ball()
+
+    if ball.is_L() == 'right':
+        lose = font.render('RIGHT LOSE', True, (255,0,0))
+        window.blit(lose, (240,20))
+        finish = True
+    if ball.is_L() == 'left':
+        lose = font.render('LEFT LOSE', True, (255,0,0))
+        window.blit(lose, (240,20))
+        finish = True
+        
 
 
 
