@@ -45,6 +45,8 @@ class Ball(sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+
+
     def update_ball(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
@@ -61,8 +63,18 @@ class Ball(sprite.Sprite):
             return 'right'
         elif self.rect.x < 0:
             return 'left'
-x = randint(-7,7)
-y = randint(-7,7)
+x = 10
+y = 10
+
+class Wall():
+    def __init__(self,x,y,width,height,color):
+        self.rect = Rect(x,y,width,height)
+        self.color = color
+
+    def draw(self):
+        draw.rect(window,self.color,self.rect)
+
+wall = Wall(365,0,3,1000,(0,0,0))
 
 platform_left = player('platform.png',20,320,4,25,99)
 platform_right = player('platform.png',660,320,4,25,99)
@@ -86,6 +98,8 @@ while run:
 
 
     window.fill(BACKCOLOR)
+
+    wall.draw()
 
 
 
