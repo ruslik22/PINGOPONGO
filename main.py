@@ -10,6 +10,10 @@ timer = time.Clock()
 
 run = True
 
+mixer.init()
+kick = mixer.Sound('kick.ogg')
+kick.set_volume(0.2)
+
 class GameSprite(sprite.Sprite):
     def __init__ (self, img, x, y, speed, width, height):
         super().__init__()
@@ -55,6 +59,7 @@ class Ball(sprite.Sprite):
 
         if sprite.collide_rect(self, platform_left) or sprite.collide_rect(self, platform_right):
             self.speed_x *= -1
+            kick.play()
         if self.rect.y< 0 or self.rect.y > SCREENSIZE[1] - self.rect.height:
             self.speed_y *= -1
     
@@ -63,8 +68,8 @@ class Ball(sprite.Sprite):
             return 'right'
         elif self.rect.x < 0:
             return 'left'
-x = 10
-y = 10
+x = 6
+y = 6
 
 class Wall():
     def __init__(self,x,y,width,height,color):
@@ -85,6 +90,8 @@ finish = False
 
 font.init()
 font = font.Font(None, 50)  
+
+
 
 
 while run:
